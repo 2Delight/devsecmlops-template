@@ -1,0 +1,9 @@
+version: '3'
+
+services:
+  mlist-frontend:
+    image: olegdayo/mlist-frontend
+    ports:
+      - '80:80'
+    volumes:
+      - './local/config/frontend.yaml:/etc/nginx/conf.d/default.conf:ro'

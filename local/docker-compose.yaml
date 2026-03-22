@@ -1,10 +1,7 @@
 version: '3'
 
-services:
-  mlist-backend:
-    command: ['/app/config.yaml']
-    image: olegdayo/mlist-backend
-    ports:
-      - '8080:8080'
-    volumes:
-      - './local/config:backend.yaml:/app/config.yaml:ro'
+include:
+  - backend.docker-compose.yaml
+  - db.docker-compose.yaml
+  - frontend.docker-compose.yaml
+  - observability.docker-compose.yaml
