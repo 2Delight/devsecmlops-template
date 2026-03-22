@@ -6,4 +6,4 @@ services:
     ports:
       - '80:80'
     volumes:
-      - './local/config/frontend.conf:/etc/nginx/conf.d/default.conf:ro'
+      - './config/frontend.conf:/etc/nginx/conf.d/default.conf:ro'

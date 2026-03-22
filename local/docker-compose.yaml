@@ -4,4 +4,4 @@ include:
   - backend.docker-compose.yaml
   - db.docker-compose.yaml
   - frontend.docker-compose.yaml
-  - observability.docker-compose.yaml
+  # - observability.docker-compose.yaml
