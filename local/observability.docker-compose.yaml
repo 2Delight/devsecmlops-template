@@ -9,11 +9,11 @@ services:
   #   ports:
   #     - '4317:4317'
 
-  loki:
-    image: grafana/loki:latest
-    command: -config.file=/etc/loki/loki.yaml
-    volumes:
-      - ./configs/loki.yaml:/etc/loki/loki.yaml
+  # loki:
+  #   image: grafana/loki:latest
+  #   command: -config.file=/etc/loki/loki.yaml
+  #   volumes:
+  #     - ./configs/loki.yaml:/etc/loki/loki.yaml
 
   # jaeger:
   #   image: jaegertracing/all-in-one
@@ -23,14 +23,14 @@ services:
   #   ports:
   #     - '16686:16686'
 
-  # db-exporter:
-  #   image: prometheuscommunity/postgres-exporter
-  #   hostname: pg-db-exporter
-  #   environment:
-  #     DATA_SOURCE_NAME: "postgres://user:password@auth-db:5432/db?sslmode=disable"
-  #   depends_on:
-  #     core-db:
-  #       condition: service_healthy
+  db-exporter:
+    image: prometheuscommunity/postgres-exporter
+    hostname: pg-db-exporter
+    environment:
+      DATA_SOURCE_NAME: "postgres://user:password@db:5432/db?sslmode=disable"
+    depends_on:
+      db:
+        condition: service_healthy
 
   prometheus:
     image: prom/prometheus
@@ -48,10 +48,10 @@ services:
     ports:
       - '3000:3000'
     environment:
-      - GF_SECURITY_ADMIN_USER=telescope
-      - GF_SECURITY_ADMIN_PASSWORD=telescope
+      - GF_SECURITY_ADMIN_USER=mlist
+      - GF_SECURITY_ADMIN_PASSWORD=mlist
       - GF_AUTH_ANONYMOUS_ENABLED=true
-      - GF_AUTH_ANONYMOUS_ORG_Name=telescope
+      - GF_AUTH_ANONYMOUS_ORG_Name=mlist
       - GF_AUTH_ANONYMOUS_ORG_ROLE=Viewer
     volumes:
       - grafana-data:/var/lib/grafana

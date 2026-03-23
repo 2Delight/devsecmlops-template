@@ -6,5 +6,9 @@ services:
     image: olegdayo/mlist-backend
     ports:
       - '8080:8080'
+      - '2112:2112'
     volumes:
-      - './config/backend.yaml:/app/config.yaml:ro'
+      - './configs/backend.yaml:/app/config.yaml:ro'
+    depends_on:
+      db:
+        condition: service_healthy
