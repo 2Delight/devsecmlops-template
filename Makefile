@@ -1,5 +1,5 @@
 .PHONY: compose
-compose:
+compose: clean
 	docker compose -f ./local/docker-compose.yaml up -d
 
 .PHONY: decompose
@@ -8,5 +8,5 @@ decompose:
 
 .PHONY: clean
 clean:
-	docker image rm olegdayo/mlist-backend:latest
-	docker image rm olegdayo/mlist-frontend:latest
+	docker image rm olegdayo/mlist-backend:latest || true
+	docker image rm olegdayo/mlist-frontend:latest || true
