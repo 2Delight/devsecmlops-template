@@ -1,19 +1,21 @@
 version: '3'
 
 services:
-  # otel-collector:
-  #   image: otel/opentelemetry-collector-contrib
-  #   hostname: otel-collector
-  #   volumes:
-  #     - ./configs/otel-collector.yaml:/etc/otelcol-contrib/config.yaml
-  #   ports:
-  #     - '4317:4317'
+  loki:
+    image: grafana/loki:latest
+    command: -config.file=/etc/loki/loki.yaml
+    volumes:
+      - ./configs/loki.yaml:/etc/loki/loki.yaml
 
-  # loki:
-  #   image: grafana/loki:latest
-  #   command: -config.file=/etc/loki/loki.yaml
-  #   volumes:
-  #     - ./configs/loki.yaml:/etc/loki/loki.yaml
+  fluent-bit:
+    image: fluent/fluent-bit:3.0
+    volumes:
+      - ./configs/fluent-bit.conf:/fluent-bit/etc/fluent-bit.conf
+    ports:
+      - "24224:24224"   # Receive logs from containers
+      - "2020:2020"     # Monitoring endpoint
+    depends_on:
+      - loki
 
   # jaeger:
   #   image: jaegertracing/all-in-one

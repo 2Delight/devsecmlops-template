@@ -3,7 +3,7 @@ version: '3'
 services:
   mlist-backend:
     command: ['/app/config.yaml']
-    image: olegdayo/mlist-backend
+    image: olegdayo/mlist-backend:latest
     ports:
       - '8080:8080'
       - '2112:2112'
@@ -12,3 +12,8 @@ services:
     depends_on:
       db:
         condition: service_healthy
+    logging:
+      driver: fluentd
+      options:
+        fluentd-address: "localhost:24224"
+        tag: "mlist.backend"

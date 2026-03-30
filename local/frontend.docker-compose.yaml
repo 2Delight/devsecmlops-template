@@ -2,8 +2,10 @@ version: '3'
 
 services:
   mlist-frontend:
-    image: olegdayo/mlist-frontend
+    image: olegdayo/mlist-frontend:latest
     ports:
       - '80:80'
     volumes:
       - './configs/frontend.conf:/etc/nginx/conf.d/default.conf:ro'
+    depends_on:
+      - mlist-backend
