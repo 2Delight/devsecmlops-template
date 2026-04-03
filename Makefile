@@ -10,3 +10,11 @@ decompose:
 clean:
 	docker image rm olegdayo/mlist-backend:latest || true
 	docker image rm olegdayo/mlist-frontend:latest || true
+
+.PHONY: vault
+vault:
+	docker compose -f ./local/vault.docker-compose.yaml up -d
+
+.PHONY: devault
+devault:
+	docker compose -f ./local/vault.docker-compose.yaml down

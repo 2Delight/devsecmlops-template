@@ -1,0 +1,16 @@
+version: '3'
+
+services:
+  vault:
+    image: ghcr.io/openbao/openbao:latest
+    command:
+      - /bin/bao
+      - server
+      - -config=/etc/openbao/openbao.hcl
+    environment:
+      VAULT_ADDR: 'http://127.0.0.1:8200'
+    ports:
+      - '8200:8200'
+    volumes:
+      - '/var/openbao:/var/openbao'
+      - './configs/openbao.hcl:/etc/openbao/openbao.hcl'
