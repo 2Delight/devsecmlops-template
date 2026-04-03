@@ -1,0 +1,22 @@
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: verify-image-signature
+spec:
+  validationFailureAction: Enforce # Or 'Audit' to log without blocking
+  background: false
+  rules:
+    - name: check-signature
+      match:
+        any:
+          - resources:
+              kinds:
+                - Pod
+      verifyImages:
+        - imageReferences:
+            - "*" # Scope of images to check
+          attestors:
+            - count: 1
+              entries:
+                - keys:
+                    kms: "hashivault://signer"
