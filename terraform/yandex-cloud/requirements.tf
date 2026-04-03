@@ -9,8 +9,8 @@ terraform {
 }
 
 resource "yandex_iam_service_account" "builder" {
-    name = "builder"
-    description = "a builder account"
+    name = "k8ser"
+    description = "a k8s builder account"
 }
 
 resource "yandex_resourcemanager_folder_iam_member" "editor" {

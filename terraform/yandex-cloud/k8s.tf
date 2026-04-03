@@ -1,4 +1,4 @@
-resource "yandex_kubernetes_cluster" "allergano" {
+resource "yandex_kubernetes_cluster" "mlops" {
     name = "mlops"
     network_id = yandex_vpc_network.k8s_network.id
     master {
@@ -20,20 +20,10 @@ resource "yandex_kubernetes_cluster" "allergano" {
     ]
 }
 
-resource "kubernetes_namespace" "argocd" {
-    metadata {
-        name = "argocd"
-    }
-    
-    depends_on = [ 
-        yandex_kubernetes_cluster.allergano
-     ]
-}
-
 resource "yandex_kubernetes_node_group" "main" {
-    cluster_id  = yandex_kubernetes_cluster.allergano.id
+    cluster_id  = yandex_kubernetes_cluster.mlops.id
     name        = "main-node"
-    version     = "1.26"
+    version     = "1.32"
 
     instance_template {
         platform_id = "standard-v2"
@@ -78,24 +68,4 @@ resource "yandex_kubernetes_node_group" "main" {
         auto_upgrade = true
         auto_repair  = true
     }
-}
-
-resource "helm_release" "argocd" {
-    name = "argocd"
-    repository       = "https://argoproj.github.io/argo-helm"
-    version          = "6.8.1"
-    chart            = "argo-cd"
-    namespace        = kubernetes_namespace.argocd.id
-    timeout          = "150"
-
-    provisioner "local-exec" {
-        command = <<EOT
-            yc managed-kubernetes cluster get-credentials allergano --external --force
-            kubectl patch svc argocd-server -n ${kubernetes_namespace.argocd.id} -p '{"spec": {"type": "LoadBalancer"}}'
-        EOT
-    }
-
-    depends_on = [
-        yandex_kubernetes_node_group.main
-    ]
 }
