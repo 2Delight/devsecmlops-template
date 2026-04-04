@@ -1,0 +1,38 @@
+apiVersion: policies.kyverno.io/v1
+kind: ImageValidatingPolicy
+metadata:
+  name: check-images
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups: [""]
+      apiVersions: ["v1"]
+      operations: ["CREATE"]
+      resources: ["pods"]
+
+  evaluation:
+    background:
+      enabled: false
+
+  validationActions: [Deny]
+  failurePolicy: Ignore 
+  webhookConfiguration:
+    timeoutSeconds: 15
+
+  attestors:
+    - name: cosign
+      cosign:
+        key:
+          data: |
+            -----BEGIN PUBLIC KEY-----
+            MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEF4i6vQWkl2v+UYdP/YWbOn+j8myt
+            W7EembEFWIlXFkuRrVOnEFw29HsxPdarMp3EJx5PCOGpbVeABcqsLuuF4w==
+            -----END PUBLIC KEY-----
+
+  validations:
+    - expression: >
+        images.containers.all(
+          i,
+          verifyImageSignatures(i, [attestors.cosign]) > 0
+        )
+      message: all images from docker.io/olegdayo must have a valid Cosign signature

@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: good-model
+  labels:
+    app: good-model
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: good-model
+  template:
+    metadata:
+      labels:
+        app: good-model
+    spec:
+      containers:
+        - name: good-model
+          image: docker.io/olegdayo/example-service:v0.0.7
+          ports:
+            - containerPort: 8000
