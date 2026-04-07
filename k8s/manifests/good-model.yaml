@@ -16,6 +16,6 @@ spec:
     spec:
       containers:
         - name: good-model
-          image: docker.io/olegdayo/example-service:v0.0.7
+          image: olegdayo/example-service:latest
           ports:
             - containerPort: 8000
