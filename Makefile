@@ -14,6 +14,14 @@ clean:
 .PHONY: kind
 kind:
 	kind create cluster --name 'mlops' --config ./local/kind/cluster.yaml
+	$(MAKE) setup-kind
+
+.PHONY: setup-kind
+setup-kind:
+	helm install kyverno-policies kyverno/kyverno-policies -n kyverno
+# 	kubectl -n kyverno patch deploy kyverno-admission-controller --patch-file k8s/manifests/kyverno-patch.yaml
+# 	kubectl apply -f k8s/manifests/signature.yaml
+	kubectl apply -f k8s/manifests/mlist.yaml
 
 .PHONY: dekind
 dekind:

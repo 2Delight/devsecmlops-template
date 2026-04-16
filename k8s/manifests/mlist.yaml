@@ -1,0 +1,32 @@
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: mlist-validation
+spec:
+  validationFailureAction: Enforce
+  background: false
+  rules:
+    - name: check-image-repo-tag
+      match:
+        any:
+          - resources:
+              kinds:
+                - Pod
+      context:
+        - name: imageData
+          variable:
+            jmesPath: "request.object.spec.containers[].image"
+
+        - name: apiResponse
+          apiCall:
+            urlPath: http://64.225.73.53/api/models/lookup?repository={{ imageData[0].split(':')[0] }}&version={{ imageData[0].split(':')[1] }}
+            method: GET
+
+      validate:
+        message: "Image is not found in MList"
+        deny:
+          conditions:
+            any:
+              - key: "{{ apiResponse.status }}"
+                operator: NotEquals
+                value: 200
