@@ -10,13 +10,12 @@ services:
       CEPH_DEMO_UID: "1"
       CEPH_DEMO_ACCESS_KEY: "something-you-shant-know"
       CEPH_DEMO_SECRET_KEY: "something-you-shant-see"
-      # CEPH_DEMO_BUCKET: "test"
       RGW_NAME: "localhost"
       CEPH_PUBLIC_NETWORK: "0.0.0.0/0"
       MON_IP: "127.0.0.1"
     command: demo
     ports:
-      - "8080:8080"
+      - "7480:8080"
 #     volumes:
 #       - ceph-data:/var/lib/ceph
 
