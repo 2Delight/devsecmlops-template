@@ -1,21 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: good-model
+  name: bad-model
   labels:
-    app: good-model
+    app: bad-model
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: good-model
+      app: bad-model
   template:
     metadata:
       labels:
-        app: good-model
+        app: bad-model
     spec:
       containers:
-        - name: good-model
-          image: olegdayo/example-service:v0.0.8
+        - name: bad-model
+          image: olegdayo/example-service:v0.0.6
           ports:
             - containerPort: 8000

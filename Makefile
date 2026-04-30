@@ -18,10 +18,17 @@ kind:
 
 .PHONY: setup-kind
 setup-kind:
+	helm repo add kyverno https://kyverno.github.io/kyverno/
+	helm repo update
+	helm install kyverno kyverno/kyverno -n kyverno --create-namespace \
+		--set admissionController.replicas=3 \
+		--set backgroundController.replicas=2 \
+		--set cleanupController.replicas=2 \
+		--set reportsController.replicas=2
 	helm install kyverno-policies kyverno/kyverno-policies -n kyverno
-# 	kubectl -n kyverno patch deploy kyverno-admission-controller --patch-file k8s/manifests/kyverno-patch.yaml
-# 	kubectl apply -f k8s/manifests/signature.yaml
 	kubectl apply -f k8s/manifests/mlist.yaml
+#  	kubectl apply -f k8s/manifests/signature.yaml
+# 	kubectl -n kyverno patch deploy kyverno-admission-controller --patch-file k8s/manifests/kyverno-patch.yaml
 
 .PHONY: dekind
 dekind:
@@ -34,3 +41,11 @@ vault:
 .PHONY: devault
 devault:
 	docker compose -f ./local/compose/vault.docker-compose.yaml down
+
+.PHONY: s3
+s3:
+	docker compose -f ./local/compose/s3.docker-compose.yaml up -d
+
+.PHONY: des3
+des3:
+	docker compose -f ./local/compose/s3.docker-compose.yaml down

@@ -30,4 +30,3 @@ spec:
                     # rekor:
                     #   ignoreTlog: true
                     #   url: https://rekor.sigstore.dev
-                    
