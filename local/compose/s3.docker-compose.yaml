@@ -16,8 +16,8 @@ services:
     command: demo
     ports:
       - "7480:8080"
-#     volumes:
-#       - ceph-data:/var/lib/ceph
+    volumes:
+      - ceph-data:/var/lib/ceph
 
-# volumes:
-#   ceph-data:
+volumes:
+  ceph-data:
