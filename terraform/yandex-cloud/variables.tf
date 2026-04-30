@@ -6,4 +6,7 @@ locals {
     # Kubernetes variables.
     k8s_host = yandex_kubernetes_cluster.mlops.master[0].external_v4_endpoint
     k8s_cluster_ca_certificate = yandex_kubernetes_cluster.mlops.master[0].cluster_ca_certificate
+
+    # S3 variables.
+    bucket_name = "mlops3"
 }
