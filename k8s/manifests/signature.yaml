@@ -20,13 +20,13 @@ spec:
           attestors:
             - entries:
                 - keys:
-                    publicKeys: |
-                      -----BEGIN PUBLIC KEY-----
-                      MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEF4i6vQWkl2v+UYdP/YWbOn+j8myt
-                      W7EembEFWIlXFkuRrVOnEFw29HsxPdarMp3EJx5PCOGpbVeABcqsLuuF4w==
-                      -----END PUBLIC KEY-----
+                    # publicKeys: |
+                    #   -----BEGIN PUBLIC KEY-----
+                    #   MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEF4i6vQWkl2v+UYdP/YWbOn+j8myt
+                    #   W7EembEFWIlXFkuRrVOnEFw29HsxPdarMp3EJx5PCOGpbVeABcqsLuuF4w==
+                    #   -----END PUBLIC KEY-----
 
-                    # kms: hashivault://signer
-                    # rekor:
-                    #   ignoreTlog: true
-                    #   url: https://rekor.sigstore.dev
+                    kms: hashivault://signer
+                    rekor:
+                      ignoreTlog: true
+                      url: https://rekor.sigstore.dev

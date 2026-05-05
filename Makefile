@@ -26,9 +26,10 @@ setup-kind:
 		--set cleanupController.replicas=2 \
 		--set reportsController.replicas=2
 	helm install kyverno-policies kyverno/kyverno-policies -n kyverno
-	kubectl apply -f k8s/manifests/mlist.yaml
+	kubectl apply -f k8s/manifests/secrets.yaml
+	kubectl -n kyverno patch deploy kyverno-admission-controller --patch-file k8s/manifests/kyverno-patch.yaml
+# 	kubectl apply -f k8s/manifests/mlist.yaml
 #  	kubectl apply -f k8s/manifests/signature.yaml
-# 	kubectl -n kyverno patch deploy kyverno-admission-controller --patch-file k8s/manifests/kyverno-patch.yaml
 
 .PHONY: dekind
 dekind:

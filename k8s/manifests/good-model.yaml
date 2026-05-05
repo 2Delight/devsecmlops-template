@@ -14,8 +14,14 @@ spec:
       labels:
         app: good-model
     spec:
+      initContainers:
+        - name: weights-downloader
+        - name: weights-verifier
       containers:
         - name: good-model
           image: olegdayo/example-service:v0.0.8
           ports:
             - containerPort: 8000
+  volumes:
+    - name: weights
+      emptyDir: {}

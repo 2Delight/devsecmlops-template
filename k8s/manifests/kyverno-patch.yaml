@@ -7,10 +7,10 @@ spec:
         - name: VAULT_ADDR
           valueFrom:
             secretKeyRef:
-              key: VAULT_ADDR
-              name: kyverno-vault-integration
+              key: address
+              name: kyverno-vault-creds
         - name: VAULT_TOKEN
           valueFrom:
             secretKeyRef:
-              key: VAULT_TOKEN
-              name: kyverno-vault-integration
+              key: token
+              name: kyverno-vault-creds
