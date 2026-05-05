@@ -16,12 +16,68 @@ spec:
     spec:
       initContainers:
         - name: weights-downloader
+          image: amazon/aws-cli:2
+          volumeMounts:
+            - name: weights
+              mountPath: /weights
+          env:
+            - name: AWS_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: init-container-s3-creds
+                  key: access_key
+            - name: AWS_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: init-container-s3-creds
+                  key: secret_access_key
+          command:
+            - /bin/sh
+            - -c
+          args:
+            - |
+              set -euo pipefail
+
+              aws --endpoint-url https://storage.yandexcloud.net cp s3://mlops3/example-service/v1.0.1 /weights
+              ls /weights
+
+              test -s /weights/yolov8n.json
+              test -s /weights/yolov8n.pt
+              test -s /weights/yolov8s.json
+              test -s /weights/yolov8s.pt
         - name: weights-verifier
+          image: ghcr.io/sigstore/cosign/cosign:v3.0.2
+          volumeMounts:
+            - name: weights
+              mountPath: /weights
+          env:
+            - name: VAULT_ADDR
+              valueFrom:
+                secretKeyRef:
+                  name: init-container-vault-creds
+                  key: address
+            - name: VAULT_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: init-container-vault-creds
+                  key: token
+          command:
+            - /bin/sh
+            - -c
+          args:
+            - |
+              set -euo pipefail
+
+              cosign verify-blob --key hashivault://signer --bundle /weights/yolov8n.json /weights/yolov8n.pt
+              cosign verify-blob --key hashivault://signer --bundle /weights/yolov8s.json /weights/yolov8s.pt
       containers:
         - name: good-model
-          image: olegdayo/example-service:v0.0.8
+          image: olegdayo/example-service:v1.0.1
           ports:
             - containerPort: 8000
+          volumeMounts:
+            - name: weights
+              mountPath: /app/weights
   volumes:
     - name: weights
       emptyDir: {}
