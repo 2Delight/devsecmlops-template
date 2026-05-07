@@ -9,8 +9,8 @@ resource "yandex_kubernetes_cluster" "mlops" {
         }
     }
 
-    service_account_id      = yandex_iam_service_account.builder.id
-    node_service_account_id = yandex_iam_service_account.builder.id
+    service_account_id      = yandex_iam_service_account.k8ser.id
+    node_service_account_id = yandex_iam_service_account.k8ser.id
 
     network_policy_provider = "CALICO"
 

@@ -17,7 +17,7 @@ kind:
 	$(MAKE) setup-k8s
 
 .PHONY: setup-k8s
-setup-kind:
+setup-k8s:
 	helm repo add kyverno https://kyverno.github.io/kyverno/
 	helm repo update
 	helm install kyverno kyverno/kyverno -n kyverno --create-namespace \
