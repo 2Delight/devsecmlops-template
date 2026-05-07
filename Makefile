@@ -25,9 +25,11 @@ setup-kind:
 		--set backgroundController.replicas=2 \
 		--set cleanupController.replicas=2 \
 		--set reportsController.replicas=2
+	kubectl -n kyverno patch deploy kyverno-admission-controller --patch-file k8s/manifests/kyverno-patch.yaml
+	sleep 5
 	helm install kyverno-policies kyverno/kyverno-policies -n kyverno
 	kubectl apply -f k8s/manifests/secrets.yaml
-	kubectl -n kyverno patch deploy kyverno-admission-controller --patch-file k8s/manifests/kyverno-patch.yaml
+	sleep 5
 # 	kubectl apply -f k8s/manifests/mlist.yaml
 #  	kubectl apply -f k8s/manifests/signature.yaml
 

@@ -16,7 +16,7 @@ spec:
     spec:
       initContainers:
         - name: weights-downloader
-          image: amazon/aws-cli:2
+          image: amazon/aws-cli:2.34.44
           volumeMounts:
             - name: weights
               mountPath: /weights
@@ -38,15 +38,15 @@ spec:
             - |
               set -euo pipefail
 
-              aws --endpoint-url https://storage.yandexcloud.net cp s3://mlops3/example-service/v1.0.1 /weights
+              aws --endpoint-url https://storage.yandexcloud.net s3 sync s3://mlops3/example-service/v1.0.1 /weights
               ls /weights
 
               test -s /weights/yolov8n.json
               test -s /weights/yolov8n.pt
               test -s /weights/yolov8s.json
               test -s /weights/yolov8s.pt
-        - name: weights-verifier
-          image: ghcr.io/sigstore/cosign/cosign:v3.0.2
+        - name: weights-verifier-n
+          image: ghcr.io/sigstore/cosign/cosign:v3.0.6
           volumeMounts:
             - name: weights
               mountPath: /weights
@@ -62,14 +62,39 @@ spec:
                   name: init-container-vault-creds
                   key: token
           command:
-            - /bin/sh
-            - -c
+            - cosign
           args:
-            - |
-              set -euo pipefail
-
-              cosign verify-blob --key hashivault://signer --bundle /weights/yolov8n.json /weights/yolov8n.pt
-              cosign verify-blob --key hashivault://signer --bundle /weights/yolov8s.json /weights/yolov8s.pt
+            - verify-blob
+            - --key
+            - hashivault://signer
+            - --bundle
+            - /weights/yolov8n.json
+            - /weights/yolov8n.pt
+        - name: weights-verifier-s
+          image: ghcr.io/sigstore/cosign/cosign:v3.0.6
+          volumeMounts:
+            - name: weights
+              mountPath: /weights
+          env:
+            - name: VAULT_ADDR
+              valueFrom:
+                secretKeyRef:
+                  name: init-container-vault-creds
+                  key: address
+            - name: VAULT_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: init-container-vault-creds
+                  key: token
+          command:
+            - cosign
+          args:
+            - verify-blob
+            - --key
+            - hashivault://signer
+            - --bundle
+            - /weights/yolov8s.json
+            - /weights/yolov8s.pt
       containers:
         - name: good-model
           image: olegdayo/example-service:v1.0.1
@@ -78,6 +103,6 @@ spec:
           volumeMounts:
             - name: weights
               mountPath: /app/weights
-  volumes:
-    - name: weights
-      emptyDir: {}
+      volumes:
+        - name: weights
+          emptyDir: {}
