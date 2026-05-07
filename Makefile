@@ -14,9 +14,9 @@ clean:
 .PHONY: kind
 kind:
 	kind create cluster --name 'mlops' --config ./local/kind/cluster.yaml
-	$(MAKE) setup-kind
+	$(MAKE) setup-k8s
 
-.PHONY: setup-kind
+.PHONY: setup-k8s
 setup-kind:
 	helm repo add kyverno https://kyverno.github.io/kyverno/
 	helm repo update
