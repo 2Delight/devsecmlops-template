@@ -1,32 +1,37 @@
-apiVersion: kyverno.io/v1
-kind: ClusterPolicy
+apiVersion: policies.kyverno.io/v1
+kind: ImageValidatingPolicy
 metadata:
-  name: verify-image-signature
+  name: verify-images
 spec:
-  validationFailureAction: Enforce
-  webhookTimeoutSeconds: 30
-  failurePolicy: Fail
-  background: false
-  rules:
-    - name: check-signature
-      match:
-        any:
-          - resources:
-              kinds:
-                - Pod
-      verifyImages:
-        - imageReferences:
-            - "docker.io/olegdayo/example-service:v*" # Scope of images to check
-          attestors:
-            - entries:
-                - keys:
-                    # publicKeys: |
-                    #   -----BEGIN PUBLIC KEY-----
-                    #   MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEF4i6vQWkl2v+UYdP/YWbOn+j8myt
-                    #   W7EembEFWIlXFkuRrVOnEFw29HsxPdarMp3EJx5PCOGpbVeABcqsLuuF4w==
-                    #   -----END PUBLIC KEY-----
-
-                    kms: hashivault://signer
-                    rekor:
-                      ignoreTlog: true
-                      url: https://rekor.sigstore.dev
+  webhookConfiguration:
+    timeoutSeconds: 30
+  evaluation:
+   background:
+    enabled: true
+  validationActions: [Deny]
+  matchConstraints:
+    resourceRules:
+      - apiGroups: [""]
+        apiVersions: ["v1"]
+        operations: ["CREATE", "UPDATE"]
+        resources: ["pods"]
+  # matchImageReferences:
+  #       - glob : "docker.io/olegdayo/example-service:*"
+  attestors:
+  - name: cosign
+    cosign:
+     key:
+      data: |
+        -----BEGIN PUBLIC KEY-----
+        MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEF4i6vQWkl2v+UYdP/YWbOn+j8myt
+        W7EembEFWIlXFkuRrVOnEFw29HsxPdarMp3EJx5PCOGpbVeABcqsLuuF4w==
+        -----END PUBLIC KEY-----
+    # - name: cosign
+    #   cosign:
+    #     key:
+    #       kms: hashivault://signer
+  validations:
+    - message: image is not authorized
+      expression: |
+       images.containers.map(image,
+         verifyImageSignatures(image, [attestors.cosign])).all(e, e > 0)

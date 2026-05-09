@@ -1,18 +1,18 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: good-model
+  name: good-model-small
   labels:
-    app: good-model
+    app: good-model-small
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: good-model
+      app: good-model-small
   template:
     metadata:
       labels:
-        app: good-model
+        app: good-model-small
     spec:
       initContainers:
         - name: weights-downloader
@@ -72,8 +72,8 @@ spec:
             - /weights/yolov8s.json
             - /weights/yolov8s.pt
       containers:
-        - name: good-model
-          image: olegdayo/example-service:v1.0.1
+        - name: good-model-small
+          image: olegdayo/example-service:v0.0.6
           args:
             - -w
             - /app/weights/yolov8s.pt
@@ -81,7 +81,7 @@ spec:
             - containerPort: 8000
           volumeMounts:
             - name: weights
-              mountPath: /app/weights
+              mountPath: /weights
       volumes:
         - name: weights
           emptyDir: {}
