@@ -1,0 +1,87 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: good-model
+  labels:
+    app: good-model
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: good-model
+  template:
+    metadata:
+      labels:
+        app: good-model
+    spec:
+      initContainers:
+        - name: weights-downloader
+          image: amazon/aws-cli:2.34.44
+          volumeMounts:
+            - name: weights
+              mountPath: /weights
+          env:
+            - name: AWS_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: init-container-s3-creds
+                  key: access_key
+            - name: AWS_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: init-container-s3-creds
+                  key: secret_access_key
+          command:
+            - /bin/sh
+            - -c
+          args:
+            - |
+              set -euo pipefail
+
+              echo "Using AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY"
+
+              aws --endpoint-url https://storage.yandexcloud.net s3 cp s3://mlops3/example-service/v1.0.1/yolov8s.pt /weights
+              aws --endpoint-url https://storage.yandexcloud.net s3 cp s3://mlops3/example-service/v1.0.1/yolov8s.json /weights
+              ls /weights
+
+              test -s /weights/yolov8s.pt
+              test -s /weights/yolov8s.json
+        - name: weights-verifier
+          image: ghcr.io/sigstore/cosign/cosign:v3.0.6
+          volumeMounts:
+            - name: weights
+              mountPath: /weights
+          env:
+            - name: VAULT_ADDR
+              valueFrom:
+                secretKeyRef:
+                  name: init-container-vault-creds
+                  key: address
+            - name: VAULT_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: init-container-vault-creds
+                  key: token
+          command:
+            - cosign
+          args:
+            - verify-blob
+            - --key
+            - hashivault://signer
+            - --bundle
+            - /weights/yolov8s.json
+            - /weights/yolov8s.pt
+      containers:
+        - name: good-model
+          image: olegdayo/example-service:v1.0.1
+          args:
+            - -w
+            - /app/weights/yolov8s.pt
+          ports:
+            - containerPort: 8000
+          volumeMounts:
+            - name: weights
+              mountPath: /app/weights
+      volumes:
+        - name: weights
+          emptyDir: {}

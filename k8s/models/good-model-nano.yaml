@@ -40,14 +40,13 @@ spec:
 
               echo "Using AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY"
 
-              aws --endpoint-url https://storage.yandexcloud.net s3 sync s3://mlops3/example-service/v1.0.1 /weights
+              aws --endpoint-url https://storage.yandexcloud.net s3 cp s3://mlops3/example-service/v1.0.1/yolov8n.pt /weights
+              aws --endpoint-url https://storage.yandexcloud.net s3 cp s3://mlops3/example-service/v1.0.1/yolov8n.json /weights
               ls /weights
 
-              test -s /weights/yolov8n.json
               test -s /weights/yolov8n.pt
-              test -s /weights/yolov8s.json
-              test -s /weights/yolov8s.pt
-        - name: weights-verifier-n
+              test -s /weights/yolov8n.json
+        - name: weights-verifier
           image: ghcr.io/sigstore/cosign/cosign:v3.0.6
           volumeMounts:
             - name: weights
@@ -72,34 +71,12 @@ spec:
             - --bundle
             - /weights/yolov8n.json
             - /weights/yolov8n.pt
-        - name: weights-verifier-s
-          image: ghcr.io/sigstore/cosign/cosign:v3.0.6
-          volumeMounts:
-            - name: weights
-              mountPath: /weights
-          env:
-            - name: VAULT_ADDR
-              valueFrom:
-                secretKeyRef:
-                  name: init-container-vault-creds
-                  key: address
-            - name: VAULT_TOKEN
-              valueFrom:
-                secretKeyRef:
-                  name: init-container-vault-creds
-                  key: token
-          command:
-            - cosign
-          args:
-            - verify-blob
-            - --key
-            - hashivault://signer
-            - --bundle
-            - /weights/yolov8s.json
-            - /weights/yolov8s.pt
       containers:
         - name: good-model
           image: olegdayo/example-service:v1.0.1
+          args:
+            - -w
+            - /app/weights/yolov8n.pt
           ports:
             - containerPort: 8000
           volumeMounts:
