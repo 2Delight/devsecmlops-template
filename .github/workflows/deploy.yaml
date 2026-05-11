@@ -30,7 +30,7 @@ jobs:
         run: |
           kubectl config set-cluster mlops-cluster \
             --server="${{ secrets.K8S_URL }}" \
-            --certificate-authority=$(echo "${{ secrets.K8S_CA_CERT }}" | base64 -d)
+            --certificate-authority-data="${{ secrets.K8S_CA_CERT }}"
 
           kubectl config set-credentials github-deployer \
             --token="${{ secrets.K8S_TOKEN }}"
