@@ -19,3 +19,10 @@ spec:
           image: olegdayo/example-service:v0.0.6
           ports:
             - containerPort: 8000
+          resources:
+            requests:
+              cpu: 1
+              memory: 256Mi
+            limits:
+              cpu: 4
+              memory: 4Gi
