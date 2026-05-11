@@ -11,6 +11,9 @@ on:
         options:
           - bad-model-image-repo-not-in-list
           - bad-model-image-version-not-in-list
+          - bad-model-image-no-init-sidecars
+          - bad-model-image-no-verifier-sidecar
+          - bad-model-image-wrong-verifier-sidecar
           - bad-model-unsigned-image
           - bad-model-unsigned-weights
           - good-model-nano

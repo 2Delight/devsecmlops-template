@@ -46,6 +46,7 @@ setup-policies:
 	kubectl apply -f ./k8s/manifests/mlist.yaml
 	kubectl apply -f ./k8s/manifests/image-verifier-cpol.yaml
 	kubectl apply -f ./k8s/manifests/deploy-verifier.yaml
+	kubectl apply -f ./k8s/manifests/model-completeness-verifier.yaml
 
 .PHONY: setup-k8s
 setup-k8s:

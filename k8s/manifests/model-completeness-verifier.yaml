@@ -1,0 +1,27 @@
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: model-completeness-verifier
+spec:
+  validationFailureAction: Enforce
+  background: true
+  rules:
+    - name: require-init-containers
+      match:
+        any:
+          - resources:
+              kinds:
+                - Deployment
+              namespaces:
+                - models
+      validate:
+        message: "Model deployments must include downloader and verifier init containers"
+        pattern:
+          spec:
+            template:
+              spec:
+                initContainers:
+                  - name: weights-downloader
+                    image: amazon/aws-cli:2.34.44
+                  - name: weights-verifier
+                    image: ghcr.io/sigstore/cosign/cosign:v2.6.2
