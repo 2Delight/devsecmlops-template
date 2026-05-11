@@ -1,21 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: bad-model
+  name: bad-model-image-repo-not-in-list
   labels:
-    app: bad-model
+    app: bad-model-image-repo-not-in-list
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: bad-model
+      app: bad-model-image-repo-not-in-list
   template:
     metadata:
       labels:
-        app: bad-model
+        app: bad-model-image-repo-not-in-list
     spec:
       containers:
-        - name: bad-model
-          image: olegdayo/example-service:v0.0.6
+        - name: bad-model-image-repo-not-in-list
+          image: olegdayo/mlist-backend:latest
           ports:
             - containerPort: 8000

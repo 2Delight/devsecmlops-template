@@ -16,8 +16,17 @@ kind:
 	kind create cluster --name 'mlops' --config ./local/kind/cluster.yaml
 	$(MAKE) setup-k8s
 
-.PHONY: setup-k8s
-setup-k8s:
+.PHONY: setup-argocd
+setup-argocd:
+	kubectl create namespace argocd
+	kubectl apply -n argocd --server-side --force-conflicts -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+	sleep 30
+	kubectl port-forward svc/argocd-server -n argocd 8080:443
+	echo 'argocd password'
+	argocd admin initial-password -n argocd
+
+.PHONY: setup-kyverno
+setup-kyverno:
 	helm repo add kyverno https://kyverno.github.io/kyverno/
 	helm repo update
 	helm install kyverno kyverno/kyverno -n kyverno --create-namespace \
@@ -28,10 +37,19 @@ setup-k8s:
 	kubectl -n kyverno patch deploy kyverno-admission-controller --patch-file k8s/manifests/kyverno-patch.yaml
 	sleep 5
 	helm install kyverno-policies kyverno/kyverno-policies -n kyverno
-	kubectl apply -f k8s/manifests/secrets.yaml
-	sleep 5
+
+.PHONY: setup-policies
+setup-policies:
 	kubectl apply -f k8s/manifests/mlist.yaml
-#  	kubectl apply -f k8s/manifests/cpol.yaml
+	kubectl apply -f k8s/manifests/image-verifier-cpol.yaml
+	kubectl apply -f k8s/manifests/deploy-verifier.yaml
+
+.PHONY: setup-k8s
+setup-k8s:
+	kubectl apply -f k8s/manifests/secrets.yaml
+	$(MAKE) setup-argocd
+	$(MAKE) setup-kyverno
+	$(MAKE) setup-policies
 
 .PHONY: dekind
 dekind:

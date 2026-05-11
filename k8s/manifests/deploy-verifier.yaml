@@ -1,0 +1,33 @@
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: deploy-verifier
+spec:
+  validationFailureAction: Enforce
+  background: false
+  rules:
+    - name: block-manual-deploys
+      match:
+        any:
+          - resources:
+              kinds:
+                - Deployment
+                - Pod
+      validate:
+        message: "Manual deploys are blocked. Use either CI/CD or GitOps."
+        deny:
+          conditions:
+            all:
+              - key: "{{ request.operation }}"
+                operator: AnyIn
+                value:
+                  - CREATE
+                  - UPDATE
+          #     - key: "{{ request.userInfo.username }}"
+          #       operator: AnyNotIn
+          #       value:
+          #         # GitOps controllers
+          #         - system:serviceaccount:argocd:argocd-application-controller
+          #         # CI/CD deployer service accounts
+          #         - system:serviceaccount:cicd:github-actions-deployer
+          #         - system:serviceaccount:cicd:gitlab-runner-deployer
