@@ -22,15 +22,9 @@ spec:
               mountPath: /weights
           env:
             - name: AWS_ACCESS_KEY_ID
-              valueFrom:
-                secretKeyRef:
-                  name: init-container-s3-creds
-                  key: access_key
+              value: malicious-access-key
             - name: AWS_SECRET_ACCESS_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: init-container-s3-creds
-                  key: secret_access_key
+              value: malicious-secret-access-key
             - name: AWS_REGION
               value: 'ru-central-1'
           command:
@@ -74,7 +68,7 @@ spec:
             - /weights/yolov8n.pt
       containers:
         - name: bad-model
-          image: olegdayo/example-service:v2.0.1 # TODO
+          image: olegdayo/example-service:v2.0.0
           ports:
             - containerPort: 8000
           resources:

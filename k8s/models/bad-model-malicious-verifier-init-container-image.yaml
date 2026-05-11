@@ -48,7 +48,7 @@ spec:
               test -s /weights/yolov8n.pt
               test -s /weights/yolov8n.json
         - name: weights-verifier
-          image: ghcr.io/sigstore/cosign/cosign:v2.6.2
+          image: busybox
           volumeMounts:
             - name: weights
               mountPath: /weights
@@ -64,17 +64,13 @@ spec:
                   name: init-container-vault-creds
                   key: token
           command:
-            - cosign
+            - /bin/sh
+            - -c
           args:
-            - verify-blob
-            - --key
-            - hashivault://signer
-            - --bundle
-            - /weights/yolov8n.json
-            - /weights/yolov8n.pt
+            - echo "i am malicious script"
       containers:
         - name: bad-model
-          image: olegdayo/example-service:v2.0.1 # TODO
+          image: olegdayo/example-service:v0.0.6
           ports:
             - containerPort: 8000
           resources:

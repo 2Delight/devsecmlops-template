@@ -65,16 +65,9 @@ spec:
                   key: token
           command:
             - cosign
-          args:
-            - verify-blob
-            - --key
-            - hashivault://signer
-            - --bundle
-            - /weights/yolov8n.json
-            - /weights/yolov8n.pt
       containers:
         - name: bad-model
-          image: olegdayo/example-service:v2.0.1 # TODO
+          image: olegdayo/example-service:v0.0.6
           ports:
             - containerPort: 8000
           resources:

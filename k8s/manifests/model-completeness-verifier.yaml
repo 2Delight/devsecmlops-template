@@ -11,7 +11,7 @@ spec:
         any:
           - resources:
               kinds:
-                - Deployment
+                - Devployment
               namespaces:
                 - models
       validate:
@@ -23,5 +23,56 @@ spec:
                 initContainers:
                   - name: weights-downloader
                     image: amazon/aws-cli:2.34.44
+                    volumeMounts:
+                      - name: weights
+                        mountPath: /weights
+                    env:
+                      - name: AWS_ACCESS_KEY_ID
+                        valueFrom:
+                          secretKeyRef:
+                            name: init-container-s3-creds
+                            key: access_key
+                      - name: AWS_SECRET_ACCESS_KEY
+                        valueFrom:
+                          secretKeyRef:
+                            name: init-container-s3-creds
+                            key: secret_access_key
+                      - name: AWS_REGION
+                        value: 'ru-central-1'
+                    command:
+                      - /bin/sh
+                      - -c
+                    args:
+                      - |
+                        set -euo pipefail
+                        # Download weights and meta
+                        aws --endpoint-url https://storage.yandexcloud.net s3 cp s3://mlops3/example-service/v1.0.1/yolov8n.pt /weights
+                        aws --endpoint-url https://storage.yandexcloud.net s3 cp s3://mlops3/example-service/v1.0.1/yolov8n.json /weights
+                        # Check that weights are downloaded
+                        test -s /weights/yolov8n.pt
+                        test -s /weights/yolov8n.json
                   - name: weights-verifier
                     image: ghcr.io/sigstore/cosign/cosign:v2.6.2
+                    volumeMounts:
+                      - name: weights
+                        mountPath: /weights
+                    env:
+                      - name: VAULT_ADDR
+                        valueFrom:
+                          secretKeyRef:
+                            name: init-container-vault-creds
+                            key: address
+                      - name: VAULT_TOKEN
+                        valueFrom:
+                          secretKeyRef:
+                            name: init-container-vault-creds
+                            key: token
+                    command:
+                      - cosign
+                    args:
+                      - verify-blob
+                      - --key
+                      - hashivault://signer
+                      - --bundle
+                      - /weights/yolov8n.json
+                      - /weights/yolov8n.pt
