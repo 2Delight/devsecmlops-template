@@ -28,4 +28,4 @@ spec:
                   # GitOps controller
                   - 'system:serviceaccount:argocd:argocd-application-controller'
                   # CI/CD deployer service accounts
-                  - 'system:serviceaccount:default:deployer'
+                  - 'system:serviceaccount:models:deployer'

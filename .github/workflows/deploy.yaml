@@ -40,9 +40,8 @@ jobs:
           kubectl config set-context mlops \
             --cluster=mlops-cluster \
             --user=github-deployer \
-            --namespace=default
 
           kubectl config use-context mlops
 
       - name: Deploy model
-        run: kubectl apply -f ./k8s/models/${{ inputs.model }}.yaml -n default
+        run: kubectl apply -f ./k8s/models/${{ inputs.model }}.yaml -n models

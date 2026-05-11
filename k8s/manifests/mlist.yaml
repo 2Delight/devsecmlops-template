@@ -23,9 +23,6 @@ spec:
           apiCall:
             service:
               url: 'http://64.225.73.53/api/models/lookup?repository={{ (images.containers.*.registry)[0] }}/{{ (images.containers.*.path)[0] }}&version={{ (images.containers.*.tag)[0] }}'
-              # jmesPath: '{error: error}'
-              # default:
-              #   error: "request_failed"
             method: GET
 
       validate:

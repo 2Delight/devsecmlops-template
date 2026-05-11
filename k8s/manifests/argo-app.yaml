@@ -4,7 +4,7 @@ metadata:
   name: models
 spec:
   destination:
-    namespace: default
+    namespace: models
     server: https://kubernetes.default.svc
   source:
     path: k8s/models

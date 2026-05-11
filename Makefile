@@ -49,6 +49,7 @@ setup-policies:
 
 .PHONY: setup-k8s
 setup-k8s:
+	kubectl create namespace models
 	kubectl create namespace argocd
 	kubectl create namespace kyverno
 	kubectl apply -f k8s/manifests/secrets.yaml
@@ -60,7 +61,7 @@ setup-k8s:
 .PHONY: output-deployer-creds
 output-deployer-creds:
 	echo 'Token'
-	kubectl create token deployer -n default
+	kubectl create token deployer -n models
 	echo ''
 	echo 'URL'
 	kubectl config view --minify -o jsonpath='{.clusters[0].cluster.server}\n'
