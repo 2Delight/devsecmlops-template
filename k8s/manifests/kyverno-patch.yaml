@@ -14,3 +14,8 @@ spec:
             secretKeyRef:
               key: token
               name: kyverno-vault-creds
+        - name: MLIST_ADDR
+          valueFrom:
+            secretKeyRef:
+              key: address
+              name: kyverno-mlist-creds

@@ -56,7 +56,6 @@ setup-k8s:
 	kubectl apply -f k8s/manifests/deployer.yaml
 	$(MAKE) setup-argocd
 	$(MAKE) setup-kyverno
-	# $(MAKE) setup-policies
 
 .PHONY: output-deployer-creds
 output-deployer-creds:
