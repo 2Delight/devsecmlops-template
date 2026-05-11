@@ -1,0 +1,46 @@
+name: Deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+      model:
+        description: "Model to deploy"
+        required: true
+        type: choice
+        default: good-model-nano
+        options:
+          - bad-model-image-repo-not-in-list
+          - bad-model-image-version-not-in-list
+          - bad-model-unsigned-image
+          - bad-model-unsigned-weights
+          - good-model-nano
+          - good-model-small
+
+jobs:
+  model-registry:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check Out
+        uses: actions/checkout@v4
+
+      - name: Install kubectl
+        uses: azure/setup-kubectl@v4
+
+      - name: Configure kube access
+        run: |
+          kubectl config set-cluster mlops-cluster \
+            --server="${{ secrets.K8S_URL }}" \
+            --certificate-authority=<(echo "${{ secrets.K8S_CA_CERT }}" | base64 -d)
+
+          kubectl config set-credentials github-deployer \
+            --token="${{ secrets.K8S_TOKEN }}"
+
+          kubectl config set-context mlops \
+            --cluster=mlops-cluster \
+            --user=github-deployer \
+            --namespace=default
+
+          kubectl config use-context mlops
+
+      - name: Deploy model
+        run: kubectl apply -f ./k8s/models/${{ inputs.model }}.yaml -n default

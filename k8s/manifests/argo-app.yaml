@@ -1,0 +1,14 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: models
+spec:
+  destination:
+    namespace: default
+    server: https://kubernetes.default.svc
+  source:
+    path: k8s/models
+    repoURL: https://github.com/2Delight/devsecmlops-template
+    targetRevision: HEAD
+  sources: []
+  project: default

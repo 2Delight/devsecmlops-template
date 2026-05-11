@@ -12,9 +12,8 @@ spec:
           - resources:
               kinds:
                 - Deployment
-                - Pod
       validate:
-        message: "Manual deploys are blocked. Use either CI/CD or GitOps."
+        message: "Manual deploys are blocked, either run a CI/CD pipeline or use GitOps!"
         deny:
           conditions:
             all:
@@ -23,11 +22,11 @@ spec:
                 value:
                   - CREATE
                   - UPDATE
-          #     - key: "{{ request.userInfo.username }}"
-          #       operator: AnyNotIn
-          #       value:
-          #         # GitOps controllers
-          #         - system:serviceaccount:argocd:argocd-application-controller
-          #         # CI/CD deployer service accounts
-          #         - system:serviceaccount:cicd:github-actions-deployer
-          #         - system:serviceaccount:cicd:gitlab-runner-deployer
+                  - DELETE
+              - key: "{{ request.userInfo.username }}"
+                operator: AnyNotIn
+                value:
+                  # GitOps controller
+                  - 'system:serviceaccount:argocd:argocd-application-controller'
+                  # CI/CD deployer service accounts
+                  - 'system:serviceaccount:default:deployer'
