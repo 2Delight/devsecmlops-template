@@ -42,7 +42,6 @@ spec:
 
               aws --endpoint-url https://storage.yandexcloud.net s3 cp s3://mlops3/example-service/v1.0.1/yolov8n.pt /weights
               aws --endpoint-url https://storage.yandexcloud.net s3 cp s3://mlops3/example-service/v1.0.1/yolov8n.json /weights
-              ls /weights
 
               test -s /weights/yolov8n.pt
               test -s /weights/yolov8n.json
