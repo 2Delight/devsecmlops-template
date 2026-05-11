@@ -1,0 +1,27 @@
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: verify-images
+spec:
+  validationFailureAction: Enforce
+  webhookTimeoutSeconds: 30
+  failurePolicy: Fail
+  background: false
+  rules:
+    - name: check-signature
+      match:
+        any:
+          - resources:
+              kinds:
+                - Pod
+      verifyImages:
+        - imageReferences:
+            - "docker.io/olegdayo/example-service:*"
+            - "olegdayo/example-service:*"
+          attestors:
+            - entries:
+                - keys:
+                    kms: hashivault://signer
+                    rekor:
+                      ignoreTlog: true
+                      url: https://rekor.sigstore.dev

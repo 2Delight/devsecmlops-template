@@ -30,8 +30,8 @@ setup-k8s:
 	helm install kyverno-policies kyverno/kyverno-policies -n kyverno
 	kubectl apply -f k8s/manifests/secrets.yaml
 	sleep 5
-# 	kubectl apply -f k8s/manifests/mlist.yaml
-#  	kubectl apply -f k8s/manifests/signature.yaml
+	kubectl apply -f k8s/manifests/mlist.yaml
+#  	kubectl apply -f k8s/manifests/cpol.yaml
 
 .PHONY: dekind
 dekind:

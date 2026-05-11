@@ -15,21 +15,22 @@ spec:
         apiVersions: ["v1"]
         operations: ["CREATE", "UPDATE"]
         resources: ["pods"]
-  # matchImageReferences:
-  #       - glob : "docker.io/olegdayo/example-service:*"
+  matchImageReferences:
+        - glob : "docker.io/olegdayo/example-service:*"
+        - glob : "olegdayo/example-service:*"
   attestors:
-  - name: cosign
-    cosign:
-     key:
-      data: |
-        -----BEGIN PUBLIC KEY-----
-        MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEF4i6vQWkl2v+UYdP/YWbOn+j8myt
-        W7EembEFWIlXFkuRrVOnEFw29HsxPdarMp3EJx5PCOGpbVeABcqsLuuF4w==
-        -----END PUBLIC KEY-----
-    # - name: cosign
-    #   cosign:
-    #     key:
-    #       kms: hashivault://signer
+  # - name: cosign
+  #   cosign:
+  #    key:
+  #     data: |
+  #       -----BEGIN PUBLIC KEY-----
+  #       MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEF4i6vQWkl2v+UYdP/YWbOn+j8myt
+  #       W7EembEFWIlXFkuRrVOnEFw29HsxPdarMp3EJx5PCOGpbVeABcqsLuuF4w==
+  #       -----END PUBLIC KEY-----
+    - name: cosign
+      cosign:
+        key:
+          kms: hashivault://signer
   validations:
     - message: image is not authorized
       expression: |
