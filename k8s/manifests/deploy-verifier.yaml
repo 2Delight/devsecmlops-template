@@ -22,7 +22,6 @@ spec:
                 value:
                   - CREATE
                   - UPDATE
-                  - DELETE
               - key: "{{ request.userInfo.username }}"
                 operator: AnyNotIn
                 value:
