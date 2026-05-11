@@ -76,7 +76,7 @@ spec:
           image: olegdayo/example-service:v2.0.0
           args:
             - -w
-            - /app/weights/yolov8n.pt
+            - /weights/yolov8n.pt
           ports:
             - containerPort: 8000
           volumeMounts:
