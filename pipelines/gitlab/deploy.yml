@@ -1,0 +1,50 @@
+spec:
+  inputs:
+    model:
+      description: 'model to deploy'
+      default: good-model-nano
+      options:
+        - bad-model-image-repo-not-in-list
+        - bad-model-image-version-not-in-list
+        - bad-model-malicious-downloader-init-container-env
+        - bad-model-malicious-verifier-init-container-command
+        - bad-model-malicious-verifier-init-container-image
+        - bad-model-image-no-init-containers
+        - bad-model-image-no-verifier-init-container
+        - bad-model-unsigned-image
+        - bad-model-unsigned-weights
+        - good-model-nano
+        - good-model-small
+---
+stages:
+  - deploy
+
+deploy:
+  stage: deploy
+  image:
+    name: bitnami/kubectl:latest
+    entrypoint: [""]
+
+  variables:
+    MODEL: $[[ inputs.model ]]
+
+  script:
+    - echo "${{ secrets.K8S_CA_CERT }}" | base64 -d > ca.crt
+
+    - kubectl config set-cluster mlops-cluster \
+    -   --server="${{ secrets.K8S_URL }}" \
+    -   --certificate-authority=ca.crt
+
+    - kubectl config set-credentials github-deployer \
+    -   --token="${{ secrets.K8S_TOKEN }}"
+
+    - kubectl config set-context mlops \
+    -   --cluster=mlops-cluster \
+    -   --user=github-deployer \
+
+    - kubectl config use-context mlops
+
+    - kubectl apply -f ./k8s/models/$MODEL.yaml -n models
+
+  rules:
+      when: manual

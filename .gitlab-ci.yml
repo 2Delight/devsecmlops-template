@@ -1,0 +1,5 @@
+include:
+  - 'pipelines/gitlab/deploy.yml'
+
+stages:
+  - deploy
