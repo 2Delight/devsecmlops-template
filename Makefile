@@ -48,6 +48,13 @@ setup-policies:
 	kubectl apply -f ./k8s/manifests/deploy-verifier.yaml
 	kubectl apply -f ./k8s/manifests/model-completeness-verifier.yaml
 
+.PHONY: remove-policies
+remove-policies:
+	kubectl delete clusterpolicy mlist-verifier
+	kubectl delete clusterpolicy image-verifier
+	kubectl delete clusterpolicy deploy-verifier
+	kubectl delete clusterpolicy model-completeness-verifier
+
 .PHONY: setup-k8s
 setup-k8s:
 	kubectl create namespace models
