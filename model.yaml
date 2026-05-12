@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bad-model-image-repo-not-in-list
+  labels:
+    app: bad-model-image-repo-not-in-list
+spec:
+  ...
+  template:
+  ...
+    spec:
+      initContainers:
+        - name: weights-downloader
+        ...
+        - name: weights-verifier
+        ...
+      containers:
+        - name: bad-model-image-repo-not-in-list
+          image: olegdayo/mlist-backend:latest
+          ports:
+            - containerPort: 8000
+          resources:
+          ...
