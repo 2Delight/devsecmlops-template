@@ -11,7 +11,7 @@ spec:
         any:
           - resources:
               kinds:
-                - Devployment
+                - Deployment
               namespaces:
                 - models
       validate:

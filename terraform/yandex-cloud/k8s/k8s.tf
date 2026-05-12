@@ -34,8 +34,8 @@ resource "yandex_kubernetes_node_group" "main" {
         }
 
         resources {
-            memory = 4
-            cores  = 4
+            memory = 8
+            cores  = 8
         }
 
         boot_disk {
@@ -54,7 +54,7 @@ resource "yandex_kubernetes_node_group" "main" {
 
     scale_policy {
         fixed_scale {
-            size = 3
+            size = 1
         }
     }
 
