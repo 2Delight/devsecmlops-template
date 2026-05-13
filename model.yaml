@@ -1,9 +1,9 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: bad-model-image-repo-not-in-list
+  name: bad-model-image-version-not-in-list
   labels:
-    app: bad-model-image-repo-not-in-list
+    app: bad-model-image-version-not-in-list
 spec:
   ...
   template:
@@ -15,8 +15,8 @@ spec:
         - name: weights-verifier
         ...
       containers:
-        - name: bad-model-image-repo-not-in-list
-          image: olegdayo/mlist-backend:latest
+        - name: bad-model-image-version-not-in-list
+          image: olegdayo/example-service:v0.0.0
           ports:
             - containerPort: 8000
           resources:
