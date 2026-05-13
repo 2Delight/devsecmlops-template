@@ -22,7 +22,7 @@ on:
           - good-model-small
 
 jobs:
-  model-registry:
+  deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Check Out

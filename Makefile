@@ -68,7 +68,7 @@ setup-k8s:
 .PHONY: output-deployer-creds
 output-deployer-creds:
 	echo 'Token'
-	kubectl create token deployer -n models
+	kubectl create token deployer --duration 87600h -n models
 	echo ''
 	echo 'URL'
 	kubectl config view --minify -o jsonpath='{.clusters[0].cluster.server}\n'
