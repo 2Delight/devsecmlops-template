@@ -14,8 +14,8 @@ on:
           - bad-model-malicious-downloader-init-container-env
           - bad-model-malicious-verifier-init-container-command
           - bad-model-malicious-verifier-init-container-image
-          - bad-model-image-no-init-containers
-          - bad-model-image-no-verifier-init-container
+          - bad-model-no-init-containers
+          - bad-model-no-verifier-init-container
           - bad-model-unsigned-image
           - bad-model-fake-weights
           - good-model-nano

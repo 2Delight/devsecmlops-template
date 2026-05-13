@@ -1,25 +1,23 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: bad-model-fake-weights
+  name: bad-model-no-init-containers
   labels:
-    app: bad-model-fake-weights
+    app: bad-model-no-init-containers
 spec:
   ...
   template:
   ...
     spec:
-      initContainers:
-        - name: weights-downloader
-        ...
-        - name: weights-verifier
-        ...
       containers:
-        - name: bad-model-fake-weights
-          image: olegdayo/example-service:v2.0.5
+        - name: bad-model-no-init-containers
+          image: olegdayo/example-service:v2.0.0
           ports:
             - containerPort: 8000
           resources:
-          ...
-      volumes:
-      ...
+            requests:
+              cpu: 1
+              memory: 256Mi
+            limits:
+              cpu: 4
+              memory: 4Gi
