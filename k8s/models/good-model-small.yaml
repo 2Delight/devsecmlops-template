@@ -46,7 +46,7 @@ spec:
               test -s /weights/yolov8s.pt
               test -s /weights/yolov8s.json
         - name: weights-verifier
-          image: ghcr.io/sigstore/cosign/cosign:v3.0.6
+          image: ghcr.io/sigstore/cosign/cosign:v2.6.2
           volumeMounts:
             - name: weights
               mountPath: /weights
