@@ -1,9 +1,9 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: bad-model-unsigned-image
+  name: bad-model-fake-weights
   labels:
-    app: bad-model-unsigned-image
+    app: bad-model-fake-weights
 spec:
   ...
   template:
@@ -15,8 +15,8 @@ spec:
         - name: weights-verifier
         ...
       containers:
-        - name: bad-model-unsigned-image
-          image: olegdayo/example-service:v2.0.1
+        - name: bad-model-fake-weights
+          image: olegdayo/example-service:v2.0.5
           ports:
             - containerPort: 8000
           resources:
