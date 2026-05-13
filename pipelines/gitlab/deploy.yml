@@ -33,15 +33,15 @@ deploy:
     - echo "$K8S_CA_CERT" | base64 -d > ca.crt
 
     - kubectl config set-cluster mlops-cluster \
-    -   --server="$K8S_URL" \
-    -   --certificate-authority=ca.crt
+        --server="$K8S_URL" \
+        --certificate-authority=ca.crt
 
     - kubectl config set-credentials github-deployer \
-    -   --token="$K8S_TOKEN"
+        --token="$K8S_TOKEN"
 
     - kubectl config set-context mlops \
-    -   --cluster=mlops-cluster \
-    -   --user=github-deployer \
+        --cluster=mlops-cluster \
+        --user=github-deployer \
 
     - kubectl config use-context mlops
 
