@@ -16,7 +16,7 @@ spec:
         ...
       containers:
         - name: bad-model-image-version-not-in-list
-          image: olegdayo/example-service:v2.0.0
+          image: olegdayo/example-service:v2.0.4
           ports:
             - containerPort: 8000
           resources:
