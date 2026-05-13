@@ -19,6 +19,9 @@ spec:
           image: olegdayo/example-service:v2.0.0
           ports:
             - containerPort: 8000
+          volumeMounts:
+            - name: weights
+              mountPath: /weights
           resources:
             requests:
               cpu: 1
@@ -26,3 +29,6 @@ spec:
             limits:
               cpu: 4
               memory: 4Gi
+      volumes:
+        - name: weights
+          emptyDir: {}

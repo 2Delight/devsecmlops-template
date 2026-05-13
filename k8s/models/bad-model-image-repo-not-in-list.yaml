@@ -73,6 +73,9 @@ spec:
           image: olegdayo/mlist-backend:latest
           ports:
             - containerPort: 8000
+          volumeMounts:
+            - name: weights
+              mountPath: /weights
           resources:
             requests:
               cpu: 1
