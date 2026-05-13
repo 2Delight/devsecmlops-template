@@ -39,12 +39,12 @@ jobs:
             --server="${{ secrets.K8S_URL }}" \
             --certificate-authority=ca.crt
 
-          kubectl config set-credentials github-deployer \
+          kubectl config set-credentials deployer \
             --token="${{ secrets.K8S_TOKEN }}"
 
           kubectl config set-context mlops \
             --cluster=mlops-cluster \
-            --user=github-deployer \
+            --user=deployer \
 
           kubectl config use-context mlops
 
