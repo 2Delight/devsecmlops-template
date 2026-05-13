@@ -1,22 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: bad-model-unsigned-weights
+  name: bad-model-fake-weights
   labels:
-    app: bad-model-unsigned-weights
+    app: bad-model-fake-weights
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: bad-model-unsigned-weights
+      app: bad-model-fake-weights
   template:
     metadata:
       labels:
-        app: bad-model-unsigned-weights
+        app: bad-model-fake-weights
     spec:
       containers:
-        - name: bad-model-unsigned-weights
-          image: olegdayo/example-service:v2.0.2 # TODO
+        - name: bad-model-fake-weights
+          image: olegdayo/example-service:v2.0.2
           ports:
             - containerPort: 8000
           resources:

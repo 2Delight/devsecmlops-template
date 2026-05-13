@@ -12,7 +12,7 @@ spec:
         - bad-model-image-no-init-containers
         - bad-model-image-no-verifier-init-container
         - bad-model-unsigned-image
-        - bad-model-unsigned-weights
+        - bad-model-fake-weights
         - good-model-nano
         - good-model-small
 ---
