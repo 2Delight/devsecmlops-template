@@ -1,18 +1,18 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: bad-model
+  name: bad-model-malicious-verifier-init-container-command
   labels:
-    app: bad-model
+    app: bad-model-malicious-verifier-init-container-command
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: bad-model
+      app: bad-model-malicious-verifier-init-container-command
   template:
     metadata:
       labels:
-        app: bad-model
+        app: bad-model-malicious-verifier-init-container-command
     spec:
       initContainers:
         - name: weights-downloader
@@ -66,7 +66,7 @@ spec:
           command:
             - cosign
       containers:
-        - name: bad-model
+        - name: bad-model-malicious-verifier-init-container-command
           image: olegdayo/example-service:v0.0.6
           ports:
             - containerPort: 8000

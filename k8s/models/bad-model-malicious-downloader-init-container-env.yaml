@@ -1,18 +1,18 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: bad-model
+  name: bad-model-malicious-downloader-init-container-env
   labels:
-    app: bad-model
+    app: bad-model-malicious-downloader-init-container-env
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: bad-model
+      app: bad-model-malicious-downloader-init-container-env
   template:
     metadata:
       labels:
-        app: bad-model
+        app: bad-model-malicious-downloader-init-container-env
     spec:
       initContainers:
         - name: weights-downloader
@@ -67,7 +67,7 @@ spec:
             - /weights/yolov8n.json
             - /weights/yolov8n.pt
       containers:
-        - name: bad-model
+        - name: bad-model-malicious-downloader-init-container-env
           image: olegdayo/example-service:v2.0.0
           ports:
             - containerPort: 8000

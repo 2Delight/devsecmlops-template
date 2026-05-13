@@ -1,18 +1,18 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: bad-model
+  name: bad-model-malicious-verifier-init-container-image
   labels:
-    app: bad-model
+    app: bad-model-malicious-verifier-init-container-image
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: bad-model
+      app: bad-model-malicious-verifier-init-container-image
   template:
     metadata:
       labels:
-        app: bad-model
+        app: bad-model-malicious-verifier-init-container-image
     spec:
       initContainers:
         - name: weights-downloader
@@ -69,7 +69,7 @@ spec:
           args:
             - echo "i am malicious script"
       containers:
-        - name: bad-model
+        - name: bad-model-malicious-verifier-init-container-image
           image: olegdayo/example-service:v0.0.6
           ports:
             - containerPort: 8000

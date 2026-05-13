@@ -43,8 +43,8 @@ setup-kyverno:
 
 .PHONY: setup-policies
 setup-policies:
-	kubectl apply -f ./k8s/manifests/mlist.yaml
-	kubectl apply -f ./k8s/manifests/image-verifier-cpol.yaml
+	kubectl apply -f ./k8s/manifests/mlist-verifier.yaml
+	kubectl apply -f ./k8s/manifests/image-verifier.yaml
 	kubectl apply -f ./k8s/manifests/deploy-verifier.yaml
 	kubectl apply -f ./k8s/manifests/model-completeness-verifier.yaml
 
