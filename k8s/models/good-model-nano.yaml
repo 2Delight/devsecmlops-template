@@ -41,8 +41,8 @@ spec:
               set -euo pipefail
 
               # Download weights and meta
-              aws --endpoint-url https://storage.yandexcloud.net s3 cp s3://mlops3/example-service/v1.0.1/yolov8n.pt /weights
-              aws --endpoint-url https://storage.yandexcloud.net s3 cp s3://mlops3/example-service/v1.0.1/yolov8n.json /weights
+              aws --endpoint-url https://storage.yandexcloud.net s3 cp s3://mlops3/example-service/v2.0.0/yolov8n.pt /weights
+              aws --endpoint-url https://storage.yandexcloud.net s3 cp s3://mlops3/example-service/v2.0.0/yolov8n.json /weights
 
               # Check that weights are downloaded
               test -s /weights/yolov8n.pt

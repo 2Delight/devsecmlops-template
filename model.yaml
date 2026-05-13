@@ -1,16 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: bad-model-no-init-containers
+  name: bad-model-no-verifier-init-container
   labels:
-    app: bad-model-no-init-containers
+    app: bad-model-no-verifier-init-container
 spec:
   ...
   template:
   ...
     spec:
+      initContainers:
+        - name: weights-downloader
+        ...
       containers:
-        - name: bad-model-no-init-containers
+        - name: bad-model-no-verifier-init-container
           image: olegdayo/example-service:v2.0.0
           ports:
             - containerPort: 8000
@@ -21,3 +24,6 @@ spec:
             limits:
               cpu: 4
               memory: 4Gi
+      volumes:
+        - name: weights
+          emptyDir: {}

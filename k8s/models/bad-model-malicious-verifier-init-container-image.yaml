@@ -41,8 +41,8 @@ spec:
               set -euo pipefail
 
               # Download weights and meta
-              aws --endpoint-url https://storage.yandexcloud.net s3 cp s3://mlops3/example-service/v1.0.1/yolov8n.pt /weights
-              aws --endpoint-url https://storage.yandexcloud.net s3 cp s3://mlops3/example-service/v1.0.1/yolov8n.json /weights
+              aws --endpoint-url https://storage.yandexcloud.net s3 cp s3://mlops3/example-service/v2.0.0/yolov8n.pt /weights
+              aws --endpoint-url https://storage.yandexcloud.net s3 cp s3://mlops3/example-service/v2.0.0/yolov8n.json /weights
 
               # Check that weights are downloaded
               test -s /weights/yolov8n.pt
@@ -64,13 +64,17 @@ spec:
                   name: init-container-vault-creds
                   key: token
           command:
-            - /bin/sh
-            - -c
+            - cosign
           args:
-            - echo "i am malicious script"
+            - verify-blob
+            - --key
+            - hashivault://signer
+            - --bundle
+            - /weights/yolov8n.json
+            - /weights/yolov8n.pt
       containers:
         - name: bad-model-malicious-verifier-init-container-image
-          image: olegdayo/example-service:v0.0.6
+          image: olegdayo/example-service:v2.0.0
           ports:
             - containerPort: 8000
           resources:

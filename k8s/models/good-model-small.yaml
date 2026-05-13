@@ -40,8 +40,8 @@ spec:
             - |
               set -euo pipefail
 
-              aws --endpoint-url https://storage.yandexcloud.net s3 cp s3://mlops3/example-service/v1.0.1/yolov8s.pt /weights
-              aws --endpoint-url https://storage.yandexcloud.net s3 cp s3://mlops3/example-service/v1.0.1/yolov8s.json /weights
+              aws --endpoint-url https://storage.yandexcloud.net s3 cp s3://mlops3/example-service/v2.0.0/yolov8s.pt /weights
+              aws --endpoint-url https://storage.yandexcloud.net s3 cp s3://mlops3/example-service/v2.0.0/yolov8s.json /weights
 
               test -s /weights/yolov8s.pt
               test -s /weights/yolov8s.json
